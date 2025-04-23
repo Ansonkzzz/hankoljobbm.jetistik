@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <title>Оқушы жетістіктері</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 30px;
+      background: linear-gradient(to bottom right, #ffffff, #f2f2f2); /* Градиентті фон */
+      max-width: 900px;
+      margin: auto;
+      color: #333;
+    }
+
+    /* Мектеп тақырыбы */
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    header img {
+      max-width: 120px;
+      border-radius: 12px;
+    }
+    header h1 {
+      font-size: 28px;
+      color: #222;
+      margin-top: 15px;
+    }
+
+    .class-item {
+      background: #cceeff;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .student-section {
+      display: none;
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-left: 4px solid #4CAF50;
+      border-radius: 6px;
+    }
+    .student-name {
+      background: #f1f1f1;
+      border: 1px solid #ccc;
+      padding: 8px;
+      margin: 6px 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .achievement-block {
+      display: none;
+      margin-top: 10px;
+    }
+    .achievement-group {
+      margin-top: 10px;
+    }
+    .achievement-group h4 {
+      margin-bottom: 5px;
+    }
+    .achievement-group ul {
+      list-style: disc;
+      margin-left: 20px;
+      padding-left: 0;
+    }
+    .achievement-group input {
+      padding: 6px;
+      margin-top: 5px;
+      width: 60%;
+    }
+    .achievement-group button {
+      padding: 6px 10px;
+      margin-left: 5px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .add-student {
+      display: flex;
+      margin-top: 10px;
+      gap: 10px;
+    }
+    .add-student input {
+      flex: 1;
+      padding: 6px;
+    }
+    .add-student button {
+      padding: 6px 12px;
+      background: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🏫 Мектеп атауы мен суреті -->
+  <header>
+    <img src="эмблема.jpg" alt="Мектеп суреті">
+    <h1>"Ханкөл жалпы орта білім беретін мектебі" КММ</h1>
+  </header>
+
+  <h2>Оқушылардың жетістіктері</h2>
+  <div id="classContainer"></div>
+
+  <script>
+    const container = document.getElementById('classContainer');
+    const classes = {};
+
+    for (let i = 1; i <= 11; i++) {
+      classes[i] = [];
+
+      const classDiv = document.createElement('div');
+      classDiv.className = 'class-item';
+      classDiv.textContent = `${i}-сынып`;
+      classDiv.onclick = () => {
+        const section = document.getElementById(`students-${i}`);
+        section.style.display = section.style.display === 'none' ? 'block' : 'none';
+      };
+
+      const sectionDiv = document.createElement('div');
+      sectionDiv.className = 'student-section';
+      sectionDiv.id = `students-${i}`;
+
+      const renderStudent = (studentName, sIndex) => {
+        const studentDiv = document.createElement('div');
+        studentDiv.className = 'student-name';
+        studentDiv.textContent = studentName;
+        studentDiv.onclick = () => {
+          const block = document.getElementById(`ach-${i}-${sIndex}`);
+          block.style.display = block.style.display === 'none' ? 'block' : 'none';
+        };
+
+        const achBlock = document.createElement('div');
+        achBlock.className = 'achievement-block';
+        achBlock.id = `ach-${i}-${sIndex}`;
+
+        ['Аудандық', 'Облыстық', 'Республикалық'].forEach((level, lIndex) => {
+          const group = document.createElement('div');
+          group.className = 'achievement-group';
+
+          const title = document.createElement('h4');
+          title.textContent = level;
+
+          const list = document.createElement('ul');
+          list.id = `ul-${i}-${sIndex}-${lIndex}`;
+
+          const input = document.createElement('input');
+          input.placeholder = 'Жетістік енгізіңіз';
+
+          const btn = document.createElement('button');
+          btn.textContent = 'Қосу';
+          btn.onclick = () => {
+            const val = input.value.trim();
+            if (val) {
+              const li = document.createElement('li');
+              li.textContent = val;
+              list.appendChild(li);
+              input.value = '';
+            }
+          };
+
+          group.appendChild(title);
+          group.appendChild(list);
+          group.appendChild(input);
+          group.appendChild(btn);
+
+          achBlock.appendChild(group);
+        });
+
+        sectionDiv.appendChild(studentDiv);
+        sectionDiv.appendChild(achBlock);
+      };
+
+      const addSection = document.createElement('div');
+      addSection.className = 'add-student';
+      const input = document.createElement('input');
+      input.placeholder = 'Жаңа оқушының аты-жөні';
+      const button = document.createElement('button');
+      button.textContent = 'Оқушы қосу';
+      button.onclick = () => {
+        const name = input.value.trim();
+        if (name) {
+          const newIndex = classes[i].length;
+          classes[i].push(name);
+          renderStudent(name, newIndex);
+          input.value = '';
+        }
+      };
+
+      addSection.appendChild(input);
+      addSection.appendChild(button);
+      sectionDiv.appendChild(addSection);
+
+      container.appendChild(classDiv);
+      container.appendChild(sectionDiv);
+    }
+  </script>
+
+</body>
+</html>
